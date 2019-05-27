@@ -81,15 +81,6 @@ To get the value out of an array at a particular index, just use `array[index]`
 syntax. In this case, we are using `for` to iterate 5 times to work through the
 array and add each item onto `sum`.
 
-### A note on source control
-
-At this point, if you are using source control \(which you should!\) I would
-`commit` the code as it is. We have working software backed by a test.
-
-I _wouldn't_ push to master though, because I plan to refactor next. It is nice
-to commit at this point in case you somehow get into a mess with refactoring
-- you can always go back to the working version.
-
 ## Refactor
 
 Let's introduce [`range`](https://gobyexample.com/range) to help clean up our code
@@ -107,11 +98,6 @@ func Sum(numbers [5]int) int {
 `range` lets you iterate over an array. Every time it is called it returns two
 values, the index and the value. We are choosing to ignore the index value by
 using `_` [blank identifier](https://golang.org/doc/effective_go.html#blank).
-
-### Back to source control
-
-Now we are happy with the code I would amend the previous commit so we only
-check in the lovely version of our code with its test.
 
 ### Arrays and their type
 
@@ -398,8 +384,7 @@ func SumAll(numbersToSum ...[]int) []int {
 ```
 
 In this implementation, we are worrying less about capacity. We start with an
-empty slice \(defined in the function signature\) and append to it the result of
-`Sum` as we work through the varargs.
+empty slice `sums` and append to it the result of `Sum` as we work through the varargs.
 
 Our next requirement is to change `SumAll` to `SumAllTails`, where it now
 calculates the totals of the "tails" of each slice. The tail of a collection is
@@ -472,7 +457,7 @@ func TestSumAllTails(t *testing.T) {
 
     t.Run("safely sum empty slices", func(t *testing.T) {
         got := SumAllTails([]int{}, []int{3, 4, 5})
-        want :=[]int{0, 9}
+        want := []int{0, 9}
 
         if !reflect.DeepEqual(got, want) {
             t.Errorf("got %v want %v", got, want)

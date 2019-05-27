@@ -8,7 +8,7 @@ In the [previous chapter](install-go.md#go-environment) we discussed how Go is o
 
 Make a directory in the following path `$GOPATH/src/github.com/{your-user-id}/hello`.
 
-So if you're on a unix based OS and your username is "bob" and you are happy to stick with Go's conventions about `$GOPATH` (which is the easiest way of setting up) you could run `mkdir -p ~/go/src/github.com/bob/hello`.
+So if you're on a unix based OS and your username is "bob" and you are happy to stick with Go's conventions about `$GOPATH` (which is the easiest way of setting up) you could run `mkdir -p $GOPATH/src/github.com/bob/hello`.
 
 Create a file in this directory called `hello.go` and write this code. To run it type `go run hello.go`.
 
@@ -175,6 +175,14 @@ func Hello(name string) string {
 
 When you run the tests they should now pass. Normally as part of the TDD cycle we should now _refactor_.
 
+### A note on source control
+
+At this point, if you are using source control \(which you should!\) I would
+`commit` the code as it is. We have working software backed by a test.
+
+I _wouldn't_ push to master though, because I plan to refactor next. It is nice
+to commit at this point in case you somehow get into a mess with refactoring - you can always go back to the working version.
+
 There's not a lot to refactor here, but we can introduce another language feature _constants_.
 
 ### Constants
@@ -182,16 +190,16 @@ There's not a lot to refactor here, but we can introduce another language featur
 Constants are defined like so
 
 ```go
-const englishPrefix = "Hello, "
+const englishHelloPrefix = "Hello, "
 ```
 
 We can now refactor our code
 
 ```go
-const englishPrefix = "Hello, "
+const englishHelloPrefix = "Hello, "
 
 func Hello(name string) string {
-    return englishPrefix + name
+    return englishHelloPrefix + name
 }
 ```
 
@@ -277,17 +285,22 @@ We've refactored our assertion into a function. This reduces duplication and imp
 Now that we have a well-written failing test, let's fix the code, using an `if`.
 
 ```go
-const englishPrefix = "Hello, "
+const englishHelloPrefix = "Hello, "
 
 func Hello(name string) string {
     if name == "" {
         name = "World"
     }
-    return englishPrefix + name
+    return englishHelloPrefix + name
 }
 ```
 
 If we run our tests we should see it satisfies the new requirement and we haven't accidentally broken the other functionality.
+
+### Back to source control
+
+Now we are happy with the code I would amend the previous commit so we only
+check in the lovely version of our code with its test.
 
 ### Discipline
 
@@ -340,7 +353,7 @@ func Hello(name string, language string) string {
     if name == "" {
         name = "World"
     }
-    return englishPrefix + name
+    return englishHelloPrefix + name
 }
 ```
 
@@ -355,7 +368,7 @@ When you try and run the test again it will complain about not passing through e
 Fix them by passing through empty strings. Now all your tests should compile _and_ pass, apart from our new scenario
 
 ```text
-hello_test.go:29: got 'Hola, Elodie' want 'Hello, Elodie'
+hello_test.go:29: got 'Hello, Elodie' want 'Hola, Elodie'
 ```
 
 We can use `if` here to check the language is equal to "Spanish" and if so change the message
@@ -370,7 +383,7 @@ func Hello(name string, language string) string {
         return "Hola, " + name
     }
 
-    return englishPrefix + name
+    return englishHelloPrefix + name
 }
 ```
 
@@ -379,8 +392,8 @@ The tests should now pass.
 Now it is time to _refactor_. You should see some problems in the code, "magic" strings, some of which are repeated. Try and refactor it yourself, with every change make sure you re-run the tests to make sure your refactoring isn't breaking anything.
 
 ```go
-const englishPrefix = "Hello, "
 const spanish = "Spanish"
+const englishHelloPrefix = "Hello, "
 const spanishHelloPrefix = "Hola, "
 
 func Hello(name string, language string) string {
@@ -392,7 +405,7 @@ func Hello(name string, language string) string {
         return spanishHelloPrefix + name
     }
 
-    return englishPrefix + name
+    return englishHelloPrefix + name
 }
 ```
 
@@ -418,7 +431,7 @@ func Hello(name string, language string) string {
         return frenchHelloPrefix + name
     }
 
-    return englishPrefix + name
+    return englishHelloPrefix + name
 }
 ```
 
@@ -432,7 +445,7 @@ func Hello(name string, language string) string {
         name = "World"
     }
 
-    prefix := englishPrefix
+    prefix := englishHelloPrefix
 
     switch language {
     case french:
@@ -467,7 +480,7 @@ func greetingPrefix(language string) (prefix string) {
     case spanish:
         prefix = spanishHelloPrefix
     default:
-        prefix = englishPrefix
+        prefix = englishHelloPrefix
     }
     return
 }

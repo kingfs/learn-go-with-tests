@@ -2,7 +2,7 @@
 
 [From Twitter](https://twitter.com/peterbourgon/status/1011403901419937792?s=09)
 
-> #golang challenge: write a function `walk(x interface{}, fn func(string))` which takes a struct `x` and calls `fn` for all strings fields found inside. difficulty level: recursively.
+> golang challenge: write a function `walk(x interface{}, fn func(string))` which takes a struct `x` and calls `fn` for all strings fields found inside. difficulty level: recursively.
 
 To do this we will need to use _reflection_.
 
@@ -702,7 +702,7 @@ How do you feel right now? It felt like maybe a nice abstraction at the time but
 
 _This is OK!_ Refactoring is a journey and sometimes we will make mistakes. A major point of TDD is it gives us the freedom to try these things out.
 
-By taking small steps backed by steps this is in no way an irreversible situation. Let's just put it back to how it was before the refactor.
+By taking small steps backed by tests this is in no way an irreversible situation. Let's just put it back to how it was before the refactor.
 
 ```go
 func walk(x interface{}, fn func(input string)) {
